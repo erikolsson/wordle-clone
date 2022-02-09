@@ -18,11 +18,11 @@ enum Words {
     }
     
     fileprivate static let primary: Set<String> = {
-        return loadWords(from: "wordle-answers-alphabetical")
+        return loadWords(from: AppState.gameLanguage.answersFileName)
     }()
     
     fileprivate static let secondary: Set<String> = {
-        return loadWords(from: "wordle-allowed-guesses")
+        return loadWords(from: AppState.gameLanguage.allowedGuessesFileName)
     }()
     
     fileprivate static func loadWords(from fileName: String) -> Set<String> {

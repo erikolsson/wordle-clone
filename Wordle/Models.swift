@@ -7,6 +7,30 @@
 
 import SwiftUI
 
+enum GameLanguage {
+    case english
+    case french
+    
+    var answersFileName: String {
+        switch self {
+        case .english:
+            return "wordle-answers-alphabetical_en"
+        case .french:
+            return "wordle-answers-alphabetical_fr"
+        }
+    }
+    
+    var allowedGuessesFileName: String {
+        switch self {
+        case .english:
+            return "wordle-allowed-guesses_en"
+        case .french:
+            return "wordle-allowed-guesses_fr"
+        }
+    }
+}
+
+
 enum LetterBox: Equatable {
 
   enum LetterBoxColor: Equatable {
