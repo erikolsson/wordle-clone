@@ -18,7 +18,7 @@ struct AppState: Equatable {
     var currentGuess: String = ""
     var guesses: [String] = []
     var gameState: GameState = .playing
-    static var gameLanguage: GameLanguage = .french
+    static var gameLanguage: GameLanguage = .english
     
     mutating func reset() {
         gameState = .playing
@@ -78,7 +78,9 @@ let appReducer = Reducer<AppState, AppAction, AppEnv> { state, action, env in
         return .none
         
     case .switchLanguage(let language):
+        guard language != AppState.gameLanguage else { return .none}
         AppState.gameLanguage = language
+        state.reset()
         return .none
     }
 }
@@ -118,8 +120,8 @@ extension AppState {
         let highlightedCharacters: Set<Character> = Set(guesses.joined()).intersection(word)
         let dimmedCharacters: Set<Character> = Set(guesses.joined())
         
-        var keys = getKeyboardLayout()
-                
+        let keys = AppState.gameLanguage.keyboardLayout
+        
         return keys.map {
             $0.map { key -> KeyboardKey in
                 switch key {
@@ -133,24 +135,4 @@ extension AppState {
             }
         }
     }
-    
-    private func getKeyboardLayout() -> [[KeyboardKey]] {
-        switch AppState.gameLanguage {
-        case .english:
-            return [
-                ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-                ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-                [.symbol("return.left"), "z", "x", "c", "v", "b", "n", "m", .symbol("delete.left")],
-            ]
-            
-        case .french:
-            return [
-                ["a", "z", "e", "r", "t", "y", "u", "i", "o", "p"],
-                ["q", "s", "d", "f", "g", "h", "j", "k", "l", "m"],
-                [.symbol("return.left"), "w", "x", "c", "v", "b", "n", .symbol("delete.left")],
-            ]
-        }
-    }
-
-    
 }

@@ -28,6 +28,24 @@ enum GameLanguage {
             return "wordle-allowed-guesses_fr"
         }
     }
+    
+    var keyboardLayout: [[KeyboardKey]] {
+        switch self {
+        case .english:
+            return [
+                ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+                ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+                [.symbol("return.left"), "z", "x", "c", "v", "b", "n", "m", .symbol("delete.left")],
+            ]
+
+        case .french:
+            return [
+                ["a", "z", "e", "r", "t", "y", "u", "i", "o", "p"],
+                ["q", "s", "d", "f", "g", "h", "j", "k", "l", "m"],
+                [.symbol("return.left"), "w", "x", "c", "v", "b", "n", .symbol("delete.left")],
+            ]
+        }
+    }
 }
 
 
