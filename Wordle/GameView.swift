@@ -34,26 +34,21 @@ struct GameView: View {
                     .toolbar {
                         ToolbarItem(placement: .primaryAction) {
                             Menu {
-                                Button {
-                                    viewStore.send(.switchLanguage(.english))
-                                } label: {
-                                    Label("English", systemImage: "character.bubble")
+                                Picker("Language",
+                                       selection: viewStore.binding(get: { $0.gameLanguage },
+                                                                    send: AppAction.switchLanguage)) {
+                                    ForEach(GameLanguage.allCases, id:\.self) { language in
+                                        Label(language.description, systemImage: "character.bubble")
+                                    }
                                 }
-
-                                Button {
-                                    viewStore.send(.switchLanguage(.french))
-                                } label: {
-                                    Label("French", systemImage: "character.bubble")
-                                }
-
                             } label: {
                                 Image(systemName: "globe")
+                                
                             }
-                            
                         }
                     }
                     .foregroundColor(.gray)
-
+                    
                 }
             }
             .navigationBarTitleDisplayMode(.inline)

@@ -7,9 +7,18 @@
 
 import SwiftUI
 
-enum GameLanguage {
+enum GameLanguage: CaseIterable {
     case english
     case french
+    
+    var description: String {
+        switch self {
+        case .english:
+            return "English"
+        case .french:
+            return "French"
+        }
+    }
     
     var answersFileName: String {
         switch self {
