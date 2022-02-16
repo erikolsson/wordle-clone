@@ -9,77 +9,77 @@ import SwiftUI
 import ComposableArchitecture
 
 extension KeyboardKey {
-    var backgroundColor: Color {
-        switch self {
-        case .character(_, let keyColor):
-            return keyColor.backgroundColor
-        case .symbol:
-            return KeyColor.normal.backgroundColor
-        }
+  var backgroundColor: Color {
+    switch self {
+    case .character(_, let keyColor):
+      return keyColor.backgroundColor
+    case .symbol:
+      return KeyColor.normal.backgroundColor
     }
+  }
 }
 
 extension KeyboardKey.KeyColor {
-    var backgroundColor: Color {
-        switch self {
-        case .normal:
-            return .gray
-        case .green:
-            return .green
-        case .gray:
-            return Color(white: 0.1)
-        }
+  var backgroundColor: Color {
+    switch self {
+    case .normal:
+      return .gray
+    case .green:
+      return .green
+    case .gray:
+      return Color(white: 0.1)
     }
+  }
 }
 
 struct KeyboardButton: View {
-    
-    let key: KeyboardKey
-    var body: some View {
-        Group {
-            switch key {
-            case let .character(character, _):
-                Text(String(character).uppercased())
-            case .symbol(let string):
-                Image(systemName: string)
-            }
-        }
-        .foregroundColor(.white)
-        .padding(.vertical)
-        .frame(maxWidth: .infinity)
-        .background(key.backgroundColor)
-        .cornerRadius(4)
+
+  let key: KeyboardKey
+  var body: some View {
+    Group {
+      switch key {
+      case let .character(character, _):
+        Text(String(character).uppercased())
+      case .symbol(let string):
+        Image(systemName: string)
+      }
     }
-    
+    .foregroundColor(.white)
+    .padding(.vertical)
+    .frame(maxWidth: .infinity)
+    .background(key.backgroundColor)
+    .cornerRadius(4)
+  }
+  
 }
 
 struct KeyboardView: View {
-    
-    let store: Store<AppState, AppAction>
-    @ObservedObject var viewStore: ViewStore<AppState, AppAction>
-    
-    init(store: Store<AppState, AppAction>) {
-        self.store = store
-        self.viewStore = ViewStore(store)
-    }
-    
-    var body: some View {
-        WithViewStore(store) { viewStore in
-            let rows = viewStore.keyboardKeys
-            VStack {
-                ForEach(rows.indices, id:\.self) { row in
-                    HStack {
-                        ForEach(rows[row].indices, id:\.self) { col in
-                            Button {
-                                viewStore.send(.keyboardInput(rows[row][col]))
-                            } label: {
-                                KeyboardButton(key: rows[row][col])
-                            }
-                        }
-                    }
-                }
+
+  let store: Store<AppState, AppAction>
+  @ObservedObject var viewStore: ViewStore<AppState, AppAction>
+
+  init(store: Store<AppState, AppAction>) {
+    self.store = store
+    self.viewStore = ViewStore(store)
+  }
+
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      let rows = viewStore.keyboardKeys
+      VStack {
+        ForEach(rows.indices, id:\.self) { row in
+          HStack {
+            ForEach(rows[row].indices, id:\.self) { col in
+              Button {
+                viewStore.send(.keyboardInput(rows[row][col]))
+              } label: {
+                KeyboardButton(key: rows[row][col])
+              }
             }
+          }
         }
-        .padding()
+      }
     }
+    .padding()
+  }
 }
