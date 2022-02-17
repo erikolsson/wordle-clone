@@ -12,25 +12,56 @@ struct GameView: View {
   let store: Store<AppState, AppAction>
 
   var body: some View {
-    ZStack {
-      Color(white: 0.1)
-        .edgesIgnoringSafeArea(.all)
 
-      WithViewStore(store) { viewStore in
-        VStack {
-          BoardView(store: self.store)
-            .layoutPriority(1)
-          Spacer()
-          switch viewStore.gameState {
-          case .playing:
-            KeyboardView(store: self.store)
+    NavigationView {
+      ZStack {
+        Color(white: 0.1)
+          .edgesIgnoringSafeArea(.all)
 
-          case .gameOver:
-            GameOverView(store: self.store)
+        WithViewStore(store) { viewStore in
+          VStack {
+            BoardView(store: self.store)
+              .layoutPriority(1)
+            Spacer()
+            switch viewStore.gameState {
+            case .playing:
+              KeyboardView(store: self.store)
+
+            case .gameOver:
+              GameOverView(store: self.store)
+            }
           }
+          .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+              Menu {
+                Picker("Language",
+                       selection: viewStore.binding(get: { $0.gameLanguage },
+                                                    send: AppAction.switchLanguage)) {
+                  ForEach(GameLanguage.allCases, id:\.self) { language in
+                    Label(language.description, systemImage: "character.bubble")
+                  }
+                }
+              } label: {
+                Image(systemName: "globe")
+
+              }
+            }
+          }
+          .foregroundColor(.gray)
+
         }
       }
+      .navigationBarTitleDisplayMode(.inline)
     }
+  }
+}
+
+
+struct GameView_Previews: PreviewProvider {
+  static var previews: some View {
+    GameView(store: Store(initialState: AppState(),
+                          reducer: appReducer,
+                          environment: AppEnv()))
   }
 }
 
@@ -81,5 +112,4 @@ struct BoardView: View {
     }
     .padding()
   }
-
 }

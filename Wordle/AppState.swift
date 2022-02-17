@@ -6,22 +6,24 @@
 //
 
 import ComposableArchitecture
+import SwiftUI
 
-struct AppState: Equatable {
-
+struct AppState: Equatable {    
   enum GameState: Equatable {
     case playing
     case gameOver(didWin: Bool)
   }
 
-  var word: String = Words.randomWord()
+  @BindableState var gameLanguage: GameLanguage = .english
+
+  var word: String = Words.randomWord(in: .english)
   var currentGuess: String = ""
   var guesses: [String] = []
   var gameState: GameState = .playing
 
   mutating func reset() {
     gameState = .playing
-    word = Words.randomWord()
+    word = Words.randomWord(in: gameLanguage)
     guesses.removeAll()
     print(word)
   }
@@ -32,9 +34,11 @@ struct AppState: Equatable {
 
 }
 
-enum AppAction: Equatable {
+enum AppAction: BindableAction {
   case keyboardInput(KeyboardKey)
   case newGame
+  case switchLanguage(GameLanguage)
+  case binding(BindingAction<AppState>)
 }
 
 struct AppEnv {}
@@ -56,7 +60,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnv> { state, action, env in
 
   case .keyboardInput(.symbol("return.left")):
     guard state.currentGuess.count == 5 else { return .none }
-    guard Words.contains(state.currentGuess) else { return .none }
+    guard Words.contains(state.currentGuess, in: state.gameLanguage) else { return .none }
     state.guesses.append(state.currentGuess)
 
     if state.currentGuess == state.word {
@@ -74,9 +78,18 @@ let appReducer = Reducer<AppState, AppAction, AppEnv> { state, action, env in
 
   case .keyboardInput(_):
     return .none
-  }
 
+  case .switchLanguage(let language):
+    guard language != state.gameLanguage else { return .none}
+    state.gameLanguage = language
+    state.reset()
+    return .none
+
+  case .binding:
+    return .none
+  }
 }
+  .binding()
 
 extension AppState {
 
@@ -113,11 +126,7 @@ extension AppState {
     let highlightedCharacters: Set<Character> = Set(guesses.joined()).intersection(word)
     let dimmedCharacters: Set<Character> = Set(guesses.joined())
 
-    let keys: [[KeyboardKey]] = [
-      ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-      ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-      [.symbol("return.left"), "z", "x", "c", "v", "b", "n", "m", .symbol("delete.left")],
-    ]
+    let keys = gameLanguage.keyboardLayout
 
     return keys.map {
       $0.map { key -> KeyboardKey in
@@ -132,5 +141,4 @@ extension AppState {
       }
     }
   }
-
 }

@@ -43,6 +43,4 @@ struct GameOverView: View {
     .foregroundColor(.white)
     .padding()
   }
-
-
 }

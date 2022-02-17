@@ -50,13 +50,14 @@ struct KeyboardButton: View {
     .background(key.backgroundColor)
     .cornerRadius(4)
   }
-
+  
 }
 
 struct KeyboardView: View {
 
   let store: Store<AppState, AppAction>
   @ObservedObject var viewStore: ViewStore<AppState, AppAction>
+
   init(store: Store<AppState, AppAction>) {
     self.store = store
     self.viewStore = ViewStore(store)
@@ -66,9 +67,9 @@ struct KeyboardView: View {
     WithViewStore(store) { viewStore in
       let rows = viewStore.keyboardKeys
       VStack {
-        ForEach(0..<rows.count) { row in
+        ForEach(rows.indices, id:\.self) { row in
           HStack {
-            ForEach(0..<rows[row].count) { col in
+            ForEach(rows[row].indices, id:\.self) { col in
               Button {
                 viewStore.send(.keyboardInput(rows[row][col]))
               } label: {
