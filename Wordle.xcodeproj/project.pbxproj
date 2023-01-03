@@ -96,12 +96,28 @@
 		B457AB4E27B3E97700234298 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F9298C8829641DF90037F57D /* English */,
+				F9298C8929641E010037F57D /* French */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F9298C8829641DF90037F57D /* English */ = {
+			isa = PBXGroup;
+			children = (
 				B457AB4627B28B3A00234298 /* wordle-allowed-guesses_en.txt */,
 				B457AB4727B28B3A00234298 /* wordle-answers-alphabetical_en.txt */,
+			);
+			path = English;
+			sourceTree = "<group>";
+		};
+		F9298C8929641E010037F57D /* French */ = {
+			isa = PBXGroup;
+			children = (
 				B457AB4B27B3E3F600234298 /* wordle-allowed-guesses_fr.txt */,
 				B457AB4A27B3E3F600234298 /* wordle-answers-alphabetical_fr.txt */,
 			);
-			path = Resources;
+			path = French;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
